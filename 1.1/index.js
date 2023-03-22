@@ -8,17 +8,9 @@ let clearbtn = document.getElementsByClassName("clear-btn")[0];
 let taskBox = document.querySelectorAll(".task-box")[0];
 let taskMenu = document.querySelectorAll(".task-box .task .settings");
 
-let todos = [
-  { task: "3/22-19:00 健身", status: "pending" },
-  { task: "3/22-20:30 回家", status: "pending" },
-  { task: "3/22-21:00 飯後休息", status: "pending" },
-  { task: "3/22-22:00 Develop TODO-LIST(V1.1)", status: "pending" },
-  { task: "3/22-24:00 Sleep", status: "pending" },
-  { task: "3/23-04:00 Wake Up & Jogging", status: "pending" },
-  { task: "3/23-04:30 吉他指板練習", status: "pending" },
-  { task: "3/23-05:30 Develop TODO-LIST(v1.1)", status: "pending" },
-  { task: "3/23-07:00 Bath & Prepare to work", status: "pending" },
-];
+let editId,
+  isEditTask = false;
+todos = JSON.parse(localStorage.getItem("todo-list"));
 
 // setting input box padding
 let inputbox_width = input_wrapper.offsetWidth;
@@ -50,8 +42,6 @@ all_span.forEach((span_element) => {
 // 當刷新就點擊span為all的選項，讓所有task list都出來
 // 當然要用showTodo('all')也可以，但有個缺點就是All span不會有點擊切換的css style,包括下底線那些
 window.onload = all_span[0].click();
-
-clearAllTask();
 
 // --------------------------------------------------------------------
 
@@ -95,27 +85,7 @@ function showTodo(spanId) {
   /* 當todos沒有task時，設定taskBox中的span的 css style */
   clearbtn_NotaskSpan_active();
   // // 當點擊checkbox，會出現
-  completedStyle();
-}
-
-function clearAllTask() {
-  /* 監聽當點擊button時，要刪除當前span選項的所有task */
-  clearbtn.addEventListener("click", () => {
-    let active_span = document.querySelector("span.active");
-    let remain_todos_index = [];
-    if (active_span.id == "all") {
-      todos = [];
-    } else {
-      todos.forEach((todo, id) => {
-        if (todo.status != active_span.id) {
-          remain_todos_index.push(todo);
-        }
-      });
-    }
-    todos = remain_todos_index;
-    console.log(todos);
-    showTodo(active_span.id);
-  });
+  // completedStyle();
 }
 
 function clearbtn_NotaskSpan_active() {
@@ -142,81 +112,101 @@ function clearbtn_NotaskSpan_active() {
   }
 }
 
-function editTask(id, task) {
-  console.log(id, task);
-}
+// function clearAllTask() {
+//   /* 監聽當點擊button時，要刪除當前span選項的所有task */
+//   clearbtn.addEventListener("click", () => {
+//     let active_span = document.querySelector("span.active");
+//     let remain_todos_index = [];
+//     if (active_span.id == "all") {
+//       todos = [];
+//     } else {
+//       todos.forEach((todo, id) => {
+//         if (todo.status != active_span.id) {
+//           remain_todos_index.push(todo);
+//         }
+//       });
+//     }
+//     todos = remain_todos_index;
+//     console.log(todos);
+//     showTodo(active_span.id);
+//   });
+// }
 
-function showMenu(element) {
-  let elmt_taskMenu = element.parentElement.querySelector(".task-menu");
-  document.querySelectorAll(".settings .task-menu").forEach((tskMenu, id) => {
-    if (elmt_taskMenu.id == id) {
-      elmt_taskMenu.style.display == "none"
-        ? (elmt_taskMenu.style.display = "block")
-        : (elmt_taskMenu.style.display = "none");
-    } else {
-      tskMenu.style.display = "none";
-    }
-  });
-}
+// function editTask(id, task) {
+//   console.log(id, task);
+// }
 
-function TaskInput(event) {
-  let json_template = { task: "", status: "" };
-  try {
-    if (event.keyCode == 13 && event.target.value != "") {
-      json_template.task = event.target.value;
-      json_template.status = "pending";
-      todos.push(json_template);
-      event.target.value = "";
-      document.querySelector(".control .filter span.active").click();
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
+// function showMenu(element) {
+//   let elmt_taskMenu = element.parentElement.querySelector(".task-menu");
+//   document.querySelectorAll(".settings .task-menu").forEach((tskMenu, id) => {
+//     if (elmt_taskMenu.id == id) {
+//       elmt_taskMenu.style.display == "none"
+//         ? (elmt_taskMenu.style.display = "block")
+//         : (elmt_taskMenu.style.display = "none");
+//     } else {
+//       tskMenu.style.display = "none";
+//     }
+//   });
+// }
 
-function updateStatus(element) {
-  todos.forEach((todo, id) => {
-    if (element.parentElement.querySelector("p").textContent == todo.task) {
-      let element_p = element.parentElement.querySelector("p");
-      if (element.checked) {
-        todos[id].status = "completed";
-        element_p.classList.remove(element_p.className);
-        element_p.classList.add(`checked${id}`);
-        completedStyle();
-      } else {
-        todos[id].status = "pending";
-        element_p.classList.remove(element_p.className);
-        element_p.classList.add(`${id}`);
-        completedStyle();
-      }
-      // console.log(todos[id]);
-    }
-  });
-}
+// function TaskInput(event) {
+//   let json_template = { task: "", status: "" };
+//   try {
+//     if (event.keyCode == 13 && event.target.value != "") {
+//       json_template.task = event.target.value;
+//       json_template.status = "pending";
+//       todos.push(json_template);
+//       event.target.value = "";
+//       document.querySelector(".control .filter span.active").click();
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
-function completedStyle() {
-  let input_ps = document.querySelectorAll("label p");
-  input_ps.forEach((input_p, id) => {
-    if (input_p.className.slice(0, 7) == "checked") {
-      let p_length = input_p.textContent.length;
-      let fontSize = parseInt(window.getComputedStyle(input_p).fontSize);
-      let textWidth = input_p.getBoundingClientRect().width;
-      let remSize = textWidth / fontSize;
-      let remSize_model = remSize + remSize * 0.12;
-      // console.log(
-      //   input_p.textContent,
-      //   fontSize,
-      //   textWidth,
-      //   remSize,
-      //   remSize_model
-      // ),
-      document.styleSheets[1].insertRule(
-        `.task-box .task label .${input_p.className}::before {width:${remSize_model}rem}`,
-        0
-      );
-      input_p.style.color = "rgba(0,0,0,0.5)";
-    } else {
-      input_p.style.color = "rgb(0,0,0)";
-    }
-  });
-}
+// function updateStatus(element) {
+//   todos.forEach((todo, id) => {
+//     if (element.parentElement.querySelector("p").textContent == todo.task) {
+//       let element_p = element.parentElement.querySelector("p");
+//       if (element.checked) {
+//         todos[id].status = "completed";
+//         element_p.classList.remove(element_p.className);
+//         element_p.classList.add(`checked${id}`);
+//         completedStyle();
+//       } else {
+//         todos[id].status = "pending";
+//         element_p.classList.remove(element_p.className);
+//         element_p.classList.add(`${id}`);
+//         completedStyle();
+//       }
+//       // console.log(todos[id]);
+//     }
+//   });
+// }
+
+// function completedStyle() {
+//   let input_ps = document.querySelectorAll("label p");
+//   input_ps.forEach((input_p, id) => {
+//     if (input_p.className.slice(0, 7) == "checked") {
+//       let p_length = input_p.textContent.length;
+//       let fontSize = parseInt(window.getComputedStyle(input_p).fontSize);
+//       let textWidth = input_p.getBoundingClientRect().width;
+//       let remSize = textWidth / fontSize;
+//       let remSize_model = remSize + remSize * 0.12;
+//       // console.log(
+//       //   input_p.textContent,
+//       //   fontSize,
+//       //   textWidth,
+//       //   remSize,
+//       //   remSize_model
+//       // ),
+//       document.styleSheets[1].insertRule(
+//         `.task-box .task label .${input_p.className}::before {width:${remSize_model}rem}`,
+//         0
+//       );
+//       input_p.style.color = "rgba(0,0,0,0.5)";
+//     } else {
+//       input_p.style.color = "rgb(0,0,0)";
+//     }
+//   });
+// }
