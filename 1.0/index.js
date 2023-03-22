@@ -8,26 +8,6 @@ let clearbtn = document.getElementsByClassName("clear-btn")[0];
 let taskBox = document.querySelectorAll(".task-box")[0];
 let taskMenu = document.querySelectorAll(".task-box .task .settings");
 
-tasks = [
-  { task: "3/22-19:00 健身", status: "completed" },
-  { task: "3/22-20:30 回家", status: "completed" },
-  { task: "3/22-21:00 飯後休息", status: "completed" },
-  { task: "3/22-22:00 Develop TODO-LIST(V1.1)", status: "pending" },
-  { task: "3/22-24:00 Sleep", status: "pending" },
-  { task: "3/23-04:00 Wake Up & Jogging", status: "pending" },
-  { task: "3/23-04:30 吉他指板練習", status: "pending" },
-  { task: "3/23-05:30 Develop TODO-LIST(v1.1)", status: "pending" },
-  { task: "3/23-07:00 Bath & Prepare to work", status: "pending" },
-];
-
-localStorage.removeItem("todo-list");
-// tasks.forEach((task, id) => {
-//   console.log(task);
-// });
-localStorage.setItem("todo-list", JSON.stringify(tasks));
-console.log(localStorage);
-todos = JSON.parse(localStorage.getItem("todo-list"));
-
 // let todos = [
 //   { task: "3/22-19:00 健身", status: "completed" },
 //   { task: "3/22-20:30 回家", status: "completed" },
@@ -39,6 +19,8 @@ todos = JSON.parse(localStorage.getItem("todo-list"));
 //   { task: "3/23-05:30 Develop TODO-LIST(v1.1)", status: "pending" },
 //   { task: "3/23-07:00 Bath & Prepare to work", status: "pending" },
 // ];
+
+let todos = JSON.parse(localStorage.getItem("todo-list"));
 
 // setting input box padding
 let inputbox_width = input_wrapper.offsetWidth;
