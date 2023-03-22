@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="./script/svg-inject-1.2.3/src/svg-inject.js"></script>
+    <script src="https://kit.fontawesome.com/99cb6ab63f.js" crossorigin="anonymous"></script>
+    <title>ToDo List</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="input">
+        <img
+          src="./img/menu-burger.svg"
+          class="img-svg"
+          onload="SVGInject(this)" />
+        <input type="text" class="input-text" placeholder="Add a new task" onkeypress="TaskInput(event)"/>
+      </div>
+      <div class="control">
+        <div class="filter">
+          <span id="all">All</span>
+          <span id="pending">Pending</span>
+          <span id="completed">Completed</span>
+        </div>
+        <button class="clear-btn">Clear All</button>
+      </div>
+      <ul class="task-box">
+        </li>
+      </ul>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
