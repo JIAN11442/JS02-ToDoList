@@ -8,18 +8,25 @@ let clearbtn = document.getElementsByClassName("clear-btn")[0];
 let taskBox = document.querySelectorAll(".task-box")[0];
 let taskMenu = document.querySelectorAll(".task-box .task .settings");
 
-// let todos = [
-//   { task: "3/22-19:00 健身", status: "completed" },
-//   { task: "3/22-20:30 回家", status: "completed" },
-//   { task: "3/22-21:00 飯後休息", status: "completed" },
-//   { task: "3/22-22:00 Develop TODO-LIST(V1.1)", status: "pending" },
-//   { task: "3/22-24:00 Sleep", status: "pending" },
-//   { task: "3/23-04:00 Wake Up & Jogging", status: "pending" },
-//   { task: "3/23-04:30 吉他指板練習", status: "pending" },
-//   { task: "3/23-05:30 Develop TODO-LIST(v1.1)", status: "pending" },
-//   { task: "3/23-07:00 Bath & Prepare to work", status: "pending" },
+// let data = [
+//   { task: "12/23-17:55 回家", status: "pending" },
+//   { task: "12/23-18:20 吃飯 & 休息", tatus: "pending" },
+//   { task: "12/23-19:00 練習吉他指板", status: "pending" },
+//   { task: "12/23-20:00 DEVELOP TODO-LIST(V1.0)", status: "pending" },
+//   { task: "12/23-24:00 SLEEP", status: "pending" },
+//   { task: "12/24-04:00 Jogging", status: "pending" },
+//   { task: "12/24-04:30 Bath", status: "pending" },
+//   {
+//     task: "12/24-05:00 The American Life Reading and Speaking",
+//     status: "pending",
+//   },
 // ];
 
+// localStorage.setItem("todo-list", JSON.stringify(data));
+
+let isEdit = false;
+
+console.log(localStorage);
 let todos = JSON.parse(localStorage.getItem("todo-list"));
 
 // setting input box padding
@@ -76,7 +83,7 @@ function showTodo(spanId) {
                 <i class="fa-solid fa-pen-to-square"></i>
                 <span>Edit</span>
               </li>
-              <li onclick="deleteTask(${id},'${spanId}')">
+              <li onclick="deleteTask(${id})">
                 <i class="fa-solid fa-trash-can"></i>
                 <span>Delete</span>
               </li>
@@ -106,17 +113,19 @@ function clearAllTask() {
     let active_span = document.querySelector("span.active");
     let remain_todos_index = [];
     if (active_span.id == "all") {
-      todos = [];
+      console.log(localStorage);
+      localStorage.removeItem("todo-list");
     } else {
       todos.forEach((todo, id) => {
         if (todo.status != active_span.id) {
           remain_todos_index.push(todo);
         }
       });
+      localStorage.removeItem("todo-list");
+      localStorage.setItem("todo-list", JSON.stringify(remain_todos_index));
     }
-    todos = remain_todos_index;
-    console.log(todos);
-    showTodo(active_span.id);
+    todos = JSON.parse(localStorage.getItem("todo-list"));
+    active_span.click();
   });
 }
 
@@ -144,10 +153,26 @@ function clearbtn_NotaskSpan_active() {
   }
 }
 
-function editTask(id, task) {
-  console.log(id, task);
+function editTask(taskId, task) {
+  isEdit = true;
   taskInput.value = task;
   taskInput.focus();
+  taskInput.addEventListener("keyup", (e) => {
+    if (e.keyCode == 13 && taskInput.value != "") {
+      todos[taskId].task = taskInput.value;
+      localStorage.removeItem("todo-list");
+      localStorage.setItem("todo-list", JSON.stringify(todos));
+      taskInput.value = "";
+      document.querySelector("span.active").click();
+    }
+  });
+}
+
+function deleteTask(taskId) {
+  todos.splice(taskId, 1);
+  localStorage.removeItem("todo-list");
+  localStorage.setItem("todo-list", JSON.stringify(todos));
+  document.querySelector("span.active").click();
 }
 
 function showMenu(taskIcon) {
@@ -156,7 +181,14 @@ function showMenu(taskIcon) {
     if (e.target != taskIcon || e.target.tagName != "I") {
       current_taskMenu.classList.remove("show");
     } else {
-      current_taskMenu.classList.add("show");
+      All_taskMenu = document.querySelectorAll(".task .settings");
+      if (All_taskMenu.length > 1) {
+        current_taskMenu.classList.remove("only-one");
+        current_taskMenu.classList.add("show");
+      } else {
+        current_taskMenu.classList.add("only-one");
+        current_taskMenu.classList.add("show");
+      }
     }
   });
 }
@@ -164,12 +196,16 @@ function showMenu(taskIcon) {
 function TaskInput(event) {
   let json_template = { task: "", status: "" };
   try {
-    if (event.keyCode == 13 && event.target.value != "") {
-      json_template.task = event.target.value;
-      json_template.status = "pending";
-      todos.push(json_template);
-      event.target.value = "";
-      document.querySelector(".control .filter span.active").click();
+    if (!isEdit) {
+      if (event.keyCode == 13 && event.target.value != "") {
+        json_template.task = event.target.value;
+        json_template.status = "pending";
+        todos = !todos ? [] : todos;
+        todos.push(json_template);
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+        event.target.value = "";
+        document.querySelector(".control .filter span.active").click();
+      }
     }
   } catch (e) {
     console.log(e);
@@ -178,8 +214,8 @@ function TaskInput(event) {
 
 function updateStatus(element) {
   todos.forEach((todo, id) => {
-    if (element.parentElement.querySelector("p").textContent == todo.task) {
-      let element_p = element.parentElement.querySelector("p");
+    let element_p = element.parentElement.querySelector("p");
+    if (element_p.textContent == todo.task) {
       if (element.checked) {
         todos[id].status = "completed";
         element_p.classList.remove(element_p.className);
@@ -189,7 +225,10 @@ function updateStatus(element) {
         element_p.classList.remove(element_p.className);
         element_p.classList.add(`${id}`);
       }
+      localStorage.removeItem("todo-list");
+      localStorage.setItem("todo-list", JSON.stringify(todos));
       taskLabelStyle();
+      document.querySelector("span.active").click();
     }
   });
 }
@@ -204,7 +243,7 @@ function taskLabelStyle() {
         task_p.style.textDecoration = "line-through";
       } else {
         // task_p.style.color = "rgba(0,0,0,0.8)";
-        task_p.style.color = "rgba(196,96,50,0.8)";
+        task_p.style.color = "rgba(196,96,50,1)";
         task_p.style.fontWeight = "500";
         task_p.style.textDecoration = "initial";
       }
