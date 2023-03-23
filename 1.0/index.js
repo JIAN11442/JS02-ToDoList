@@ -26,6 +26,9 @@ let taskMenu = document.querySelectorAll(".task-box .task .settings");
 
 let isEdit = false;
 let todos = JSON.parse(localStorage.getItem("todo-list"));
+let customize_fontSize = window.getComputedStyle(
+  document.querySelector(".wrapper .input .input-text")
+).fontSize;
 
 // setting input box padding
 let inputbox_width = input_wrapper.offsetWidth;
@@ -98,7 +101,7 @@ function showTodo(spanId) {
      簡單來說，當'||' => 看哪個是'true',返回哪個；當'&&' => 看第一運算元素，是false就返回第一個，不是就返回第二個
      */
   taskBox.innerHTML =
-    liTag || `<span class="no-task-span">You don't have any task here</span>`;
+    liTag || `<span class="no-task-span">You don't have any task here...</span>`;
 
   /* 當todos沒有task時，設定taskBox中的span的 css style */
   clearbtn_NotaskSpan_active();
@@ -142,7 +145,7 @@ function clearbtn_NotaskSpan_active() {
       taskBox.style.flexDirection = "row";
       taskBox.style.justifyContent = "center";
       no_task_span.style.color = "rgba(0,0,0,0.4)";
-      no_task_span.style.fontSize = "18px";
+      no_task_span.style.fontSize = `${customize_fontSize}`;
       no_task_span.style.filter = "drop-shadow(2px 2px 2px rgba(0,0,0,0.2))";
     }
   } catch (e) {
@@ -161,6 +164,7 @@ function editTask(taskId, task) {
       localStorage.setItem("todo-list", JSON.stringify(todos));
       taskInput.value = "";
       document.querySelector("span.active").click();
+      isEdit = false;
     }
   });
 }

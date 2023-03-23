@@ -329,4 +329,17 @@ p[class^="checked"] {
   .wrapper {
     transform: scale(0.6);
   }
+
+  .wrapper .input .input-text,
+  .wrapper .control .filter span,
+  .wrapper .control .clear-btn,
+  .task-box .task,
+  .settings i,
+  .settings ul li i {
+    font-size: 20px;
+  }
+
+  .settings .task-menu {
+    width: 150px;
+  }
 }
