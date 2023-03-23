@@ -215,7 +215,7 @@ function TaskInput(event) {
 function updateStatus(element) {
   let current_taskClassName = element.parentElement.lastElementChild.className;
   let current_spanId = document.querySelector("span.active");
-  if (parseInt(current_taskClassName)) {
+  if (parseInt(current_taskClassName) || parseInt(current_taskClassName) == 0) {
     taskId = parseInt(current_taskClassName);
     todos[taskId].status = "completed";
     localStorage.removeItem("todo-list");
