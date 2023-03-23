@@ -341,6 +341,7 @@ p[class^="checked"] {
   }
 
   .settings .task-menu {
-    width: 150px;
+    width: 180px;
+    padding: 5px;
   }
 }
