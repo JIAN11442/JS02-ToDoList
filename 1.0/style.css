@@ -324,3 +324,9 @@ p[class^="checked"] {
   font-size: 15px;
   margin-right: 10px;
 }
+
+@media screen and (max-width: 500px) {
+  .wrapper {
+    transform: scale(0.55);
+  }
+}

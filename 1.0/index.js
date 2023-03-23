@@ -111,7 +111,6 @@ function clearAllTask() {
     let active_span = document.querySelector("span.active");
     let remain_todos_index = [];
     if (active_span.id == "all") {
-      console.log(localStorage);
       localStorage.removeItem("todo-list");
     } else {
       todos.forEach((todo, id) => {
