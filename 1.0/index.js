@@ -193,11 +193,13 @@ function showMenu(taskIcon) {
 
 function TaskInput(event) {
   let json_template = { task: "", status: "" };
+  let spanId = document.querySelector("span.active").id;
   try {
     if (!isEdit) {
       if (event.keyCode == 13 && event.target.value != "") {
         json_template.task = event.target.value;
-        json_template.status = "pending";
+        json_template.status = spanId == "completed" ? spanId : "pending";
+        console.log(json_template.status);
         todos = !todos ? [] : todos;
         todos.push(json_template);
         localStorage.setItem("todo-list", JSON.stringify(todos));
@@ -211,24 +213,24 @@ function TaskInput(event) {
 }
 
 function updateStatus(element) {
-  todos.forEach((todo, id) => {
-    let element_p = element.parentElement.querySelector("p");
-    if (element_p.textContent == todo.task) {
-      if (element.checked) {
-        todos[id].status = "completed";
-        element_p.classList.remove(element_p.className);
-        element_p.classList.add(`checked${id}`);
-      } else {
-        todos[id].status = "pending";
-        element_p.classList.remove(element_p.className);
-        element_p.classList.add(`${id}`);
-      }
-      localStorage.removeItem("todo-list");
-      localStorage.setItem("todo-list", JSON.stringify(todos));
-      taskLabelStyle();
-      document.querySelector("span.active").click();
-    }
-  });
+  let current_taskClassName = element.parentElement.lastElementChild.className;
+  let current_spanId = document.querySelector("span.active");
+  if (parseInt(current_taskClassName)) {
+    taskId = parseInt(current_taskClassName);
+    todos[taskId].status = "completed";
+    localStorage.removeItem("todo-list");
+    localStorage.setItem("todo-list", JSON.stringify(todos));
+    current_spanId.click();
+    element.className = `checked${taskId}`;
+  } else {
+    taskId = current_taskClassName.slice(7, current_taskClassName.length);
+    todos[taskId].status = "pending";
+    localStorage.removeItem("todo-list");
+    localStorage.setItem("todo-list", JSON.stringify(todos));
+    current_spanId.click();
+    element.className = taskId;
+  }
+  taskLabelStyle();
 }
 
 function taskLabelStyle() {
