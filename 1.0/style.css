@@ -328,7 +328,7 @@ p[class^="checked"] {
 @media screen and (max-width: 700px) {
   .wrapper {
     transform: scale(0.6);
-    transform-origin: center;
+    transform-origin: bottom center;
   }
 
   .wrapper .input .input-text,
@@ -337,7 +337,7 @@ p[class^="checked"] {
   .task-box .task,
   .settings i,
   .settings ul li i {
-    font-size: 22px;
+    font-size: 23px;
   }
 
   .settings .task-menu {
