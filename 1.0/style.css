@@ -13,6 +13,7 @@
 }
 
 body {
+  scale: 0.8;
   width: 100vw;
   height: 100vh;
   background-image: linear-gradient(
@@ -21,18 +22,12 @@ body {
     rgb(3, 54, 73),
     rgb(3, 22, 52)
   );
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
+  position: relative;
   justify-content: center;
   align-items: center;
-}
-
-.opacity-div {
-  width: 100%;
-  height: 10px;
-  background-color: red;
-  position: absolute;
-  top: 0;
 }
 
 .wrapper {

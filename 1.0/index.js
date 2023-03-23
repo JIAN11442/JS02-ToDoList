@@ -25,8 +25,6 @@ let taskMenu = document.querySelectorAll(".task-box .task .settings");
 // localStorage.setItem("todo-list", JSON.stringify(data));
 
 let isEdit = false;
-
-console.log(localStorage);
 let todos = JSON.parse(localStorage.getItem("todo-list"));
 
 // setting input box padding
